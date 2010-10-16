@@ -1,0 +1,22 @@
+{
+    "name":"like.everywhere",
+    "version":"1.0",
+    "description":"facebook's Like everywhere",
+//    "icons":{
+//        "16":"Icon-16.png",
+//        "48":"Icon-48.png",
+//        "128":"Icon-128.png"
+//    },
+    "content_scripts":[
+        {
+            "all_frames": true,
+            "matches":[
+                "http://*/*",
+                "https://*/*"
+            ],
+            "js":["like.everywhere.beforeload.js"],
+            "run_at":"document_start"
+        }
+    ],
+    "permissions":["http://www.facebook.com/*"]
+}
