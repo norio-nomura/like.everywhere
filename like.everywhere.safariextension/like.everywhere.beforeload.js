@@ -28,7 +28,7 @@ if (window.top === window) {
     
     window.top.likeEverywhere = {};
     
-    var LikeFrame = function(obj) {
+    var LikeFrame = function (obj) {
         this.URL = 'http://www.facebook.com/plugins/like.php';
         this.params = obj;
         this.iframe = window.top.document.createElement('iframe');
@@ -47,51 +47,49 @@ if (window.top === window) {
     
     if (LikeFrame.prototype.defineProperty) {
         LikeFrame.prototype.defineProperty(LikeFrame.prototype, 'href', {
-            getter: function(){
+            getter: function () {
                 return this.params.href;
             },
-            setter: function(newhRef) {
+            setter: function (newHref) {
                 this.params.href = encodeURIComponent(newHref);
-                var paramsArray = [];
+                var paramsArray = [], newSrc;
                 for (var i in this.params) {
                     paramsArray.push(i + '=' + this.params[i]);
                 }
-                var newSrc = this.URL + '?' + paramsArray.sort().join('&');
-                if (this.iframe.src != newSrc) {
-                    console.log(newSrc);
+                newSrc = this.URL + '?' + paramsArray.sort().join('&');
+                if (this.iframe.src !== newSrc) {
                     this.iframe.src = newSrc;
                 }
             }
         });
     } else {
-        LikeFrame.prototype.__defineGetter__('href', function() {
+        LikeFrame.prototype.__defineGetter__('href', function () {
             return this.params.href;
         });
-        LikeFrame.prototype.__defineSetter__('href', function(newHref) {
+        LikeFrame.prototype.__defineSetter__('href', function (newHref) {
             this.params.href = encodeURIComponent(newHref);
-            var paramsArray = [];
+            var paramsArray = [], newSrc;
             for (var i in this.params) {
                 paramsArray.push(i + '=' + this.params[i]);
             }
-            var newSrc = this.URL + '?' + paramsArray.sort().join('&');
-            if (this.iframe.src != newSrc) {
-                    console.log(newSrc);
+            newSrc = this.URL + '?' + paramsArray.sort().join('&');
+            if (this.iframe.src !== newSrc) {
                 this.iframe.src = newSrc;
             }
         });
     }
     
-    LikeFrame.prototype.addEventListener = function(type, listener, useCapture) {
+    LikeFrame.prototype.addEventListener = function (type, listener, useCapture) {
         this.iframe.addEventListener(type, listener, useCapture);
     };
     
-    LikeFrame.prototype.shrinkHeight = function() {
+    LikeFrame.prototype.shrinkHeight = function () {
         this.style.height = '0px';
         this.style.paddingTop = '0px';
         this.style.paddingBottom = '0px';
     };
     
-    LikeFrame.prototype.restoreHeight = function() {
+    LikeFrame.prototype.restoreHeight = function () {
         this.style.height = this.params.height + 'px';
         this.style.paddingTop = this.style.paddingLeft;
         this.style.paddingBottom = this.style.paddingLeft;
@@ -111,20 +109,20 @@ if (window.top === window) {
     frameStandard.style.bottom = '3px';
     frameStandard.style.right = '3px';
     frameStandard.style.webkitBorderRadius = '3px';
-    frameStandard.style.webkitBoxShadow = '0px 0px 10px rgba(0,0,0,1)'
+    frameStandard.style.webkitBoxShadow = '0px 0px 10px rgba(0,0,0,1)';
     frameStandard.style.zIndex = '1001';
-    frameStandard.addEventListener('mouseover', function(evt) {
+    frameStandard.addEventListener('mouseover', function (evt) {
         var frameStandard = window.top.likeEverywhere.frameStandard;
         if (frameStandard.timerID) {
-            clearTimeout(frameStandard.timerID);
+            window.clearTimeout(frameStandard.timerID);
             delete frameStandard.timerID;
             frameStandard.restoreHeight();
         }
     });
-    frameStandard.addEventListener('mouseout', function(evt) {
+    frameStandard.addEventListener('mouseout', function (evt) {
         var frameStandard = window.top.likeEverywhere.frameStandard;
         if (!frameStandard.timerID) {
-            frameStandard.timerID = setTimeout(function(){
+            frameStandard.timerID = window.setTimeout(function () {
                 frameStandard.shrinkHeight();
                 delete frameStandard.timerID;
             }, 2000);
@@ -148,37 +146,37 @@ if (window.top === window) {
     frameBoxCount.style.display = 'block';
     frameBoxCount.style.opacity = '0.5';
     frameBoxCount.style.zIndex = '1000';
-    frameBoxCount.addEventListener('mouseover', function() {
+    frameBoxCount.addEventListener('mouseover', function () {
         var frameBoxCount = window.top.likeEverywhere.frameBoxCount;
         frameBoxCount.style.opacity = '1.0';
         if (!frameBoxCount.timerID) {
-            frameBoxCount.timerID = setTimeout(function(){
+            frameBoxCount.timerID = window.setTimeout(function () {
                 frameBoxCount.style.opacity = '0.5';
                 window.top.likeEverywhere.frameStandard.restoreHeight();
                 delete frameBoxCount.timerID;
             }, 3000);
         }
     });
-    frameBoxCount.addEventListener('mouseout', function() {
+    frameBoxCount.addEventListener('mouseout', function () {
         var frameBoxCount = window.top.likeEverywhere.frameBoxCount;
         if (frameBoxCount.timerID) {
-            clearTimeout(frameBoxCount.timerID);
+            window.clearTimeout(frameBoxCount.timerID);
             delete frameBoxCount.timerID;
             frameBoxCount.style.opacity = '0.5';
         }
     });
     window.top.likeEverywhere.frameBoxCount = frameBoxCount;
     
-    window.top.likeEverywhere.addFramesToBody = function() {
+    window.top.likeEverywhere.addFramesToBody = function () {
         var likeEverywhere = window.top.likeEverywhere;
         if (window.top.document.body) {
+            delete likeEverywhere.addFramesToBody;
             window.top.document.body.appendChild(likeEverywhere.frameStandard.iframe);
             window.top.document.body.appendChild(likeEverywhere.frameBoxCount.iframe);
-            delete likeEverywhere.addFramesToBody;
         }
     };
     
-    window.document.addEventListener('load', function() {
+    window.document.addEventListener('load', function () {
         var likeEverywhere = window.top.likeEverywhere;
         if (likeEverywhere.addFramesToBody) {
             likeEverywhere.addFramesToBody();
